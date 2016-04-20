@@ -11,7 +11,9 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:extension.tidyHtml"
+    "onCommand:extension.tidyHtml",
+    "workspaceContains:.htmlTidy",
+    "onLanguage:html"
   ],
   "main": "./out/src/extension",
   "contributes": {
@@ -25,12 +27,12 @@
       "type": "object",
       "title": "TidyHtml config",
       "properties": {
-        "tidyHtml.onSave": {
+        "tidyHtml.formatOnSave": {
           "type": [
             "array",
             "boolean"
           ],
-          "default": false,
+          "default": true,
           "description": "Automatically format files on save. Set to true to run for html. Use array to set indiviaul types to format: [\"html\", \"php\"]",
           "items": {
             "type": "string",
@@ -66,7 +68,6 @@
     "vscode": "^0.11.0"
   },
   "dependencies": {
-    "fs": "^0.0.2",
     "lodash": "^4.11.1"
   }
 }

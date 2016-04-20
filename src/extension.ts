@@ -1,23 +1,19 @@
 'use strict';
 import * as vscode from 'vscode';
-import * as fs from 'fs';
 import {Formatter} from './Formatter';
 
-
-
 export function activate(context: vscode.ExtensionContext) {
-
     const formatter = new Formatter();
 
+    const changeConfiguration = vscode.workspace.onDidChangeConfiguration(formatter.readSettings, formatter);
+    context.subscriptions.push(changeConfiguration);
 
-    let disposable = vscode.commands.registerCommand('extension.tidyHtml', () => {
-        formatter.format();
-    });
+    const didSave = vscode.workspace.onDidSaveTextDocument(formatter.formatAuto, formatter);
+    context.subscriptions.push(didSave);
 
-    context.subscriptions.push(disposable);
+    const commandTidyHtml = vscode.commands.registerTextEditorCommand('extension.tidyHtml', formatter.formatTextEditor, formatter);
+    context.subscriptions.push(commandTidyHtml);
 }
-
-
 
 export function deactivate() {
 }
