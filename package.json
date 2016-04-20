@@ -20,7 +20,39 @@
         "command": "extension.tidyHtml",
         "title": "TidyHtml"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "TidyHtml config",
+      "properties": {
+        "tidyHtml.onSave": {
+          "type": [
+            "array",
+            "boolean"
+          ],
+          "default": false,
+          "description": "Automatically format files on save. Set to true to run for html. Use array to set indiviaul types to format: [\"html\", \"php\"]",
+          "items": {
+            "type": "string",
+            "description": "Set to format only provided types on save."
+          }
+        },
+        "tidyHtml.optionsTidy": {
+          "type": "object",
+          "description": "default options for Tidy HTML"
+        },
+        "tidyHtml.enableDynamicTags": {
+          "type": "boolean",
+          "default": true,
+          "description": "all tags with '-' separator will be added to new-blocklevel-tags. e.g angular bootstrap: uib-alert"
+        },
+        "tidyHtml.tidyExecPath": {
+          "type": "string",
+          "default": "C:/Users/weber/github/atom-htmltidy/lib/bin/win32/tidy.exe",
+          "description": "path to tidy executable"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
@@ -30,9 +62,11 @@
   "devDependencies": {
     "eslint": "^2.8.0",
     "typescript": "^1.8.5",
+    "typings": "^0.8.1",
     "vscode": "^0.11.0"
   },
   "dependencies": {
+    "fs": "^0.0.2",
     "lodash": "^4.11.1"
   }
 }

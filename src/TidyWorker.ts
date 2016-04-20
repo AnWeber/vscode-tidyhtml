@@ -1,7 +1,6 @@
-'use babel';
-
-import childprocess from 'child_process';
-import lodash from 'lodash';
+'use strict';
+import * as childprocess from 'child_process';
+import * as lodash from 'lodash';
 
 //const EXIT_CODE_OK = 0;
 const EXIT_CODE_WARNING = 1;
@@ -10,8 +9,11 @@ const EXIT_CODE_ERROR = 2;
 /**
  * handle child_process to spawn tidy
  */
-class TidyWorker {
-  constructor(tidyExec, options) {
+export class TidyWorker {
+  tidyExec: string;
+  options: any;
+
+  constructor(tidyExec:string, options:any) {
     this.tidyExec = tidyExec;
 
     this.options = options;
@@ -24,7 +26,7 @@ class TidyWorker {
    * @param  {object} options json object to convert
    * @return {array} command line arguments
    */
-  _parseOptions(options) {
+  _parseOptions(options : any) {
     options = options || {};
     var args = [];
 
@@ -56,7 +58,7 @@ class TidyWorker {
    * @param  {string} text content for formatting
    * @return {Promise} promise
    */
-  formatAsync(text) {
+  formatAsync(text) : Promise<string> {
     return new Promise((resolve, reject) => {
       const worker = childprocess.spawn(this.tidyExec, this._parseOptions(this.options));
       let formattedText = '';
