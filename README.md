@@ -46,9 +46,9 @@ to formatted state
 
 ## Settings
 * tidyHtml.formatOnSave
-    *auto format html files. If set to value true only .html will be formatted. You can provide an array of file extension to format other filetype e.g. ['.html', '.php']
+    * auto format html files. If set to value true only .html will be formatted. You can provide an array of file extension to format other filetype e.g. ['.html', '.php']
 * tidyHtml.tidyExecPath:
-    *file path to tidy exe. If no path is provided, the build in tidy exe (v 5.2.0) will be used
+    * file path to tidy exe. If no path is provided, the build in tidy exe (v 5.2.0) will be used
 * tidyHtml.optionsTidy
     * list of command line arguments for tidy exe. Here you can find a full list of available options: [Tidy-HTML5](http://api.html-tidy.org/tidy/quickref_5.2.0.html)
     * if you create a .htmltidy json file in the workspace root, then this options are preferred
