@@ -13,6 +13,8 @@ export function activate(context: vscode.ExtensionContext) {
 
     const commandTidyHtml = vscode.commands.registerTextEditorCommand('extension.tidyHtml', formatter.formatTextEditor, formatter);
     context.subscriptions.push(commandTidyHtml);
+
+    return formatter;
 }
 
 export function deactivate() {

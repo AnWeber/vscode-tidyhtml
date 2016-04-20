@@ -41,6 +41,26 @@
         },
         "tidyHtml.optionsTidy": {
           "type": "object",
+          "default": {
+            "markup": true,
+            "output-xml": false,
+            "input-xml": true,
+            "show-warnings": true,
+            "show-errors": 6,
+            "numeric-entities": false,
+            "quote-marks": false,
+            "quote-nbsp": true,
+            "quote-ampersand": false,
+            "break-before-br": false,
+            "preserve-entities": true,
+            "uppercase-tags": false,
+            "uppercase-attributes": false,
+            "indent": "auto",
+            "indent-with-tabs": false,
+            "indent-attributes": true,
+            "sort-attributes": "alpha",
+            "wrap": 250
+          },
           "description": "default options for Tidy HTML"
         },
         "tidyHtml.enableDynamicTags": {
@@ -50,7 +70,6 @@
         },
         "tidyHtml.tidyExecPath": {
           "type": "string",
-          "default": "C:/Users/weber/github/atom-htmltidy/lib/bin/win32/tidy.exe",
           "description": "path to tidy executable"
         }
       }

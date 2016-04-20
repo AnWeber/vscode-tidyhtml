@@ -5,20 +5,29 @@ import * as path from 'path';
 import {TidyWorker} from './TidyWorker';
 import * as lodash from 'lodash';
 
+/**
+ * format manager
+ */
 export class Formatter {
     private tidyWorker: TidyWorker;
     private config: any;
     private options: any;
+    private autoFormatDocument: TextDocument;
 
     constructor() {
         this.readSettings();
         this.options = this.getOptions();
     }
-
+    /**
+     * refresh config
+     */
     readSettings() {
         this.config = workspace.getConfiguration('tidyHtml');
     }
 
+    /**
+     * get options from workspace options or from file .htmltidy
+     */
     getOptions() {
         let options = this.config.optionsTidy;
         if (workspace.rootPath) {
@@ -35,11 +44,21 @@ export class Formatter {
         return options;
     }
 
+    /**
+     *  format the document of the textEditor
+     * @param {TextEditor} textEditor active TextEditor
+     */
     formatTextEditor(textEditor: TextEditor) {
         this.format(textEditor.document);
     }
 
+    /**
+     *  check if auto format is enabled and format the document
+     * @param {TextDocument} document the document to format
+     */
     formatAuto(document: TextDocument) {
+
+
         if (this.config.formatOnSave) {
             let formatDocument = false;
             const extName = path.extname(document.uri.toString());
@@ -49,31 +68,68 @@ export class Formatter {
                 formatDocument = true;
             }
             if (formatDocument) {
+                //if the formattedtext is saved, the next autoformat is called. to break out the loop the last autoformat document is saved
+                if (this.autoFormatDocument === document) {
+                    this.autoFormatDocument = null;
+                    return;
+                }
+                this.autoFormatDocument = document;
                 this.format(document);
             }
         }
     }
-
+    /**
+     *  format the content of the document
+     * @param {TextDocument} document the document to format
+     */
     format(document: TextDocument) {
         if (document) {
             const text = document.getText();
             if (text && text.length > 0) {
                 const options = lodash.merge(this.options, this.addUnknownTagsToNewBlockLevel(text));
-                var worker = new TidyWorker(this.config.tidyExecPath, options);
-                return worker.formatAsync(text)
-                    .then((formattedText) => {
-                        const range = new Range(0, 0, Number.MAX_VALUE, Number.MAX_VALUE);
-                        let we = new WorkspaceEdit();
-                        we.replace(document.uri, range, formattedText);
-                        return workspace.applyEdit(we);
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        const errors = err.split('\n\r');
-                        window.showWarningMessage(errors[0]);
-                    });
+                const tidyExecPath = this.getTidyExec();
+                if (tidyExecPath) {
+                    var worker = new TidyWorker(tidyExecPath, options);
+                    return worker.formatAsync(text)
+                        .then((formattedText) => {
+                            const range = new Range(0, 0, Number.MAX_VALUE, Number.MAX_VALUE);
+                            let we = new WorkspaceEdit();
+                            we.replace(document.uri, range, formattedText);
+                            return workspace.applyEdit(we);
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                            const errors = err.split('\n\r');
+                            window.showWarningMessage(errors[0]);
+                        });
+                }
             }
         }
+    }
+
+    /**
+    * filename of the tidy html 5 executable
+    *
+    * @returns filename
+    */
+    getTidyExec() {
+        let tidyExec = this.config.tidyExecPath;
+        if (tidyExec) {
+            if (fs.existsSync(tidyExec)) {
+                return tidyExec;
+            } else {
+                window.showWarningMessage(`configured tidy executable is missing. Fallback to default`);
+            }
+        }
+        tidyExec = `${__dirname}/../../tidy/${process.platform}/tidy`;
+        if (process.platform === 'win32') {
+            tidyExec += '.exe';
+        }
+        if (fs.existsSync(tidyExec)) {
+            return tidyExec;
+        }
+        window.showWarningMessage(`Unsupported platform ${process.platform}. Please configure own tidy executable.`);
+        return null;
     }
 
     /**
