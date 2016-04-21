@@ -2,13 +2,29 @@
   "name": "vscode-tidyhtml",
   "displayName": "vscode-tidyhtml",
   "description": "format html with tidy html",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "anweber",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.0.0"
   },
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/AnWeber/vscode-tidyhtml"
+	},
+	"bugs": {
+		"url": "https://github.com/AnWeber/vscode-tidyhtml/issues"
+	},
+  "keywords": [
+    "html",
+    "format",
+    "beautify",
+    "prettify",
+    "tidy"
+  ],
   "categories": [
-    "Other"
+    "Other",
+    "Languages"
   ],
   "activationEvents": [
     "onCommand:extension.tidyHtml",

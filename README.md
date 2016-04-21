@@ -88,6 +88,9 @@ to formatted state
 
 ## Changelog
 
+* v0.0.2 updated package.json
+    * add missing properties in package.json
+
 * v0.0.1: initial release
     * converted extension [atom-htmltidy](https://atom.io/packages/atom-htmltidy) to vscode extension
     * changed js source to typescript source
