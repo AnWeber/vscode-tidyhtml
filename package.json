@@ -2,7 +2,7 @@
   "name": "vscode-tidyhtml",
   "displayName": "vscode-tidyhtml",
   "description": "format html with tidy html",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "anweber",
   "license": "MIT",
   "engines": {
@@ -83,6 +83,11 @@
           "type": "boolean",
           "default": true,
           "description": "all tags with '-' separator will be added to new-blocklevel-tags. e.g angular bootstrap: uib-alert"
+        },
+        "tidyHtml.showWarningOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "show warning, if format fails"
         },
         "tidyHtml.tidyExecPath": {
           "type": "string",

@@ -99,8 +99,10 @@ export class Formatter {
                         })
                         .catch((err) => {
                             console.log(err);
-                            const errors = err.split('\n\r');
-                            window.showWarningMessage(errors[0]);
+                            if(this.config.showWarningOnSave){
+                                const errors = err.split('\n\r');
+                                window.showWarningMessage(errors[0]);
+                            }
                         });
                 }
             }
