@@ -87,6 +87,10 @@ to formatted state
 * a schema file for the .htmltidy json file in the workspace root could be provided.
 
 ## Changelog
+
+* v0.0.4
+    * fixed missing tidy exe
+
 * v0.0.3
     * optional warning dialog on format error
 
