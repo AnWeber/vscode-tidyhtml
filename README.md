@@ -88,6 +88,9 @@ to formatted state
 
 ## Changelog
 
+* v0.0.5 
+	* fixed an uppercase error on linux machine
+
 * v0.0.4
     * fixed missing tidy exe
 

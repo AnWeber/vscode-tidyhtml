@@ -8,13 +8,13 @@
   "engines": {
     "vscode": "^1.0.0"
   },
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/AnWeber/vscode-tidyhtml"
-	},
-	"bugs": {
-		"url": "https://github.com/AnWeber/vscode-tidyhtml/issues"
-	},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AnWeber/vscode-tidyhtml"
+  },
+  "bugs": {
+    "url": "https://github.com/AnWeber/vscode-tidyhtml/issues"
+  },
   "keywords": [
     "html",
     "format",
@@ -33,12 +33,10 @@
   ],
   "main": "./out/src/extension",
   "contributes": {
-    "commands": [
-      {
-        "command": "extension.tidyHtml",
-        "title": "TidyHtml"
-      }
-    ],
+    "commands": [{
+      "command": "extension.tidyHtml",
+      "title": "TidyHtml"
+    }],
     "configuration": {
       "type": "object",
       "title": "TidyHtml config",

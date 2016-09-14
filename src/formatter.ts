@@ -2,7 +2,7 @@
 import {window, workspace, WorkspaceEdit, Range, TextDocument, TextEditor} from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import {TidyWorker} from './TidyWorker';
+import {TidyWorker} from './tidyworker';
 import * as lodash from 'lodash';
 
 /**
