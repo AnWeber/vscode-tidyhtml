@@ -1,112 +1,114 @@
 {
-  "name": "vscode-tidyhtml",
-  "displayName": "vscode-tidyhtml",
-  "description": "format html with tidy html",
-  "version": "0.0.4",
-  "publisher": "anweber",
-  "license": "MIT",
-  "engines": {
-    "vscode": "^1.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/AnWeber/vscode-tidyhtml"
-  },
-  "bugs": {
-    "url": "https://github.com/AnWeber/vscode-tidyhtml/issues"
-  },
-  "keywords": [
-    "html",
-    "format",
-    "beautify",
-    "prettify",
-    "tidy"
-  ],
-  "categories": [
-    "Other",
-    "Languages"
-  ],
-  "activationEvents": [
-    "onCommand:extension.tidyHtml",
-    "workspaceContains:.htmlTidy",
-    "onLanguage:html"
-  ],
-  "main": "./out/src/extension",
-  "contributes": {
-    "commands": [{
-      "command": "extension.tidyHtml",
-      "title": "TidyHtml"
-    }],
-    "configuration": {
-      "type": "object",
-      "title": "TidyHtml config",
-      "properties": {
-        "tidyHtml.formatOnSave": {
-          "type": [
-            "array",
-            "boolean"
-          ],
-          "default": true,
-          "description": "Automatically format files on save. Set to true to run for html. Use array to set indiviaul types to format: [\"html\", \"php\"]",
-          "items": {
-            "type": "string",
-            "description": "Set to format only provided types on save."
-          }
-        },
-        "tidyHtml.optionsTidy": {
-          "type": "object",
-          "default": {
-            "markup": true,
-            "output-xml": false,
-            "input-xml": true,
-            "show-warnings": true,
-            "show-errors": 6,
-            "numeric-entities": false,
-            "quote-marks": false,
-            "quote-nbsp": true,
-            "quote-ampersand": false,
-            "break-before-br": false,
-            "preserve-entities": true,
-            "uppercase-tags": false,
-            "uppercase-attributes": false,
-            "indent": "auto",
-            "indent-with-tabs": false,
-            "indent-attributes": true,
-            "sort-attributes": "alpha",
-            "wrap": 250
-          },
-          "description": "default options for Tidy HTML"
-        },
-        "tidyHtml.enableDynamicTags": {
-          "type": "boolean",
-          "default": true,
-          "description": "all tags with '-' separator will be added to new-blocklevel-tags. e.g angular bootstrap: uib-alert"
-        },
-        "tidyHtml.showWarningOnSave": {
-          "type": "boolean",
-          "default": false,
-          "description": "show warning, if format fails"
-        },
-        "tidyHtml.tidyExecPath": {
-          "type": "string",
-          "description": "path to tidy executable"
+    "name": "vscode-tidyhtml",
+    "displayName": "vscode-tidyhtml",
+    "description": "format html with tidy html",
+    "version": "0.1.0",
+    "publisher": "anweber",
+    "license": "MIT",
+    "engines": {
+        "vscode": "^1.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/AnWeber/vscode-tidyhtml"
+    },
+    "bugs": {
+        "url": "https://github.com/AnWeber/vscode-tidyhtml/issues"
+    },
+    "keywords": [
+        "html",
+        "format",
+        "beautify",
+        "prettify",
+        "tidy"
+    ],
+    "categories": [
+        "Other",
+        "Languages"
+    ],
+    "activationEvents": [
+        "onCommand:extension.tidyHtml",
+        "workspaceContains:.htmlTidy",
+        "onLanguage:html"
+    ],
+    "main": "./out/src/extension",
+    "contributes": {
+        "commands": [
+            {
+                "command": "extension.tidyHtml",
+                "title": "TidyHtml"
+            }
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "TidyHtml config",
+            "properties": {
+                "tidyHtml.formatOnSave": {
+                    "type": [
+                        "array",
+                        "boolean"
+                    ],
+                    "default": true,
+                    "description": "Automatically format files on save. Set to true to run for html. Use array to set indiviaul types to format: [\"html\", \"php\"]",
+                    "items": {
+                        "type": "string",
+                        "description": "Set to format only provided types on save."
+                    }
+                },
+                "tidyHtml.optionsTidy": {
+                    "type": "object",
+                    "default": {
+                        "markup": true,
+                        "output-xml": false,
+                        "input-xml": true,
+                        "show-warnings": true,
+                        "show-errors": 6,
+                        "numeric-entities": false,
+                        "quote-marks": false,
+                        "quote-nbsp": true,
+                        "quote-ampersand": false,
+                        "break-before-br": false,
+                        "preserve-entities": true,
+                        "uppercase-tags": false,
+                        "uppercase-attributes": false,
+                        "indent": "auto",
+                        "indent-with-tabs": false,
+                        "indent-attributes": true,
+                        "sort-attributes": "alpha",
+                        "wrap": 250
+                    },
+                    "description": "default options for Tidy HTML"
+                },
+                "tidyHtml.enableDynamicTags": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "all tags with '-' separator will be added to new-blocklevel-tags. e.g angular bootstrap: uib-alert"
+                },
+                "tidyHtml.showWarningOnSave": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "show warning, if format fails"
+                },
+                "tidyHtml.tidyExecPath": {
+                    "type": "string",
+                    "description": "path to tidy executable"
+                }
+            }
         }
-      }
+    },
+    "icon": "icon.png",
+    "scripts": {
+        "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
+        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install"
+    },
+    "devDependencies": {
+        "eslint": "^2.8.0",
+        "typescript": "^1.8.5",
+        "typings": "^0.8.1",
+        "vscode": "^0.11.0"
+    },
+    "dependencies": {
+        "lodash": "^4.11.1"
     }
-  },
-  "icon": "icon.png",
-  "scripts": {
-    "vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-    "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
-    "postinstall": "node ./node_modules/vscode/bin/install"
-  },
-  "devDependencies": {
-    "eslint": "^2.8.0",
-    "typescript": "^1.8.5",
-    "typings": "^0.8.1",
-    "vscode": "^0.11.0"
-  },
-  "dependencies": {
-    "lodash": "^4.11.1"
-  }
 }
