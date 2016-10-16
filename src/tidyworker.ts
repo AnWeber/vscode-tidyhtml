@@ -13,7 +13,7 @@ export class TidyWorker {
   tidyExec: string;
   options: any;
 
-  constructor(tidyExec:string, options:any) {
+  constructor(tidyExec: string, options: any) {
     this.tidyExec = tidyExec;
 
     this.options = options;
@@ -26,12 +26,12 @@ export class TidyWorker {
    * @param  {object} options json object to convert
    * @return {array} command line arguments
    */
-  _parseOptions(options : any) {
+  _parseOptions(options: any) {
     options = options || {};
     var args = [];
 
     const toHyphens = (str) => {
-      return str.replace(/([A-Z])/g, function(m, w) {
+      return str.replace(/([A-Z])/g, function (m, w) {
         return '-' + w.toLowerCase();
       });
     };
@@ -58,8 +58,8 @@ export class TidyWorker {
    * @param  {string} text content for formatting
    * @return {Promise} promise
    */
-  formatAsync(text) : Promise<string> {
-    return new Promise((resolve, reject) => {
+  formatAsync(text): Promise<string> {
+    let promise = new Promise((resolve, reject) => {
       const worker = childprocess.spawn(this.tidyExec, this._parseOptions(this.options));
       let formattedText = '';
       let error = '';
@@ -83,6 +83,7 @@ export class TidyWorker {
       });
       worker.stdin.end(text);
     });
+    return promise;
   }
 
   /**
@@ -98,10 +99,10 @@ export class TidyWorker {
       });
       const worker = childprocess.spawn(this.tidyExec, this._parseOptions(options));
       let error = '';
-      worker.stderr.on('data', function(data) {
+      worker.stderr.on('data', function (data) {
         error += data;
       });
-      worker.on('exit', function(code) {
+      worker.on('exit', function (code) {
         resolve(error);
       });
       worker.stdin.end(text);
