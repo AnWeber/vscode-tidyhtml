@@ -87,8 +87,10 @@ to formatted state
 * a schema file for the .htmltidy json file in the workspace root could be provided.
 
 ## Changelog
+* v1.0.0
+	* tried to fix a linux error
 
-* v0.0.5 
+* v0.0.5
 	* fixed an uppercase error on linux machine
 
 * v0.0.4
