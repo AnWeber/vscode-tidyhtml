@@ -103,12 +103,12 @@
         "postinstall": "node ./node_modules/vscode/bin/install"
     },
     "devDependencies": {
-        "eslint": "^2.8.0",
+        "eslint": "3.9.0",
         "typescript": "^1.8.5",
-        "typings": "^0.8.1",
+        "typings": "1.5.0",
         "vscode": "^0.11.0"
     },
     "dependencies": {
-        "lodash": "^4.11.1"
+        "lodash": "^4.16.4"
     }
 }
