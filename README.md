@@ -87,7 +87,11 @@ to formatted state
 * a schema file for the .htmltidy json file in the workspace root could be provided.
 
 ## Changelog
-* v1.0.0
+* v1.2.0
+	* updated category
+	* fixed error preventing auto format
+
+* v1.1.0
 	* tried to fix a linux error
 
 * v0.0.5

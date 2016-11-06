@@ -16,6 +16,7 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
     private allowNextFormat: boolean;
 
     constructor() {
+        this.allowNextFormat = true;
         this.readSettings();
     }
     /**
