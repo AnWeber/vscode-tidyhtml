@@ -23,7 +23,7 @@
         "tidy"
     ],
     "categories": [
-        "Formatters",
+        "Formatters"
     ],
     "activationEvents": [
         "onCommand:extension.tidyHtml",
