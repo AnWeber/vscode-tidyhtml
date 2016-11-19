@@ -13,10 +13,8 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
     private config: any;
     private tidySettings: any;
     private tidyExec: string;
-    private allowNextFormat: boolean;
 
     constructor() {
-        this.allowNextFormat = true;
         this.readSettings();
     }
     /**
@@ -57,7 +55,8 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
     *  check if auto format is enabled and format the document
     * @param {TextDocument} document the document to format
     */
-    formatAuto(document: vscode.TextDocument) {
+    formatAuto(event: vscode.TextDocumentWillSaveEvent) {
+        const document = event.document;
         if (this.config.formatOnSave) {
             let formatDocument = false;
             const extName = path.extname(document.uri.toString());
@@ -67,32 +66,11 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
                 formatDocument = true;
             }
             if (formatDocument) {
-                if (this.allowNextFormat) {
-                    this.allowNextFormat = false;
-
-                    this.format(document)
-                        .then(textedits => {
-                            const we = new vscode.WorkspaceEdit();
-                            textedits.forEach(edit => {
-                                we.replace(document.uri, edit.range, edit.newText);
-                            });
-                            return vscode.workspace.applyEdit(we);
-                        })
-                        .then(result => {
-                            this.allowNextFormat = true;
-                            return result;
-                        })
-                        .catch((err) => {
-                            console.log(err);
-                            if (this.config.showWarningOnSave) {
-                                const errors = err.split('\n\r');
-                                vscode.window.showWarningMessage(errors[0]);
-                            }
-                        });
-                }
+                event.waitUntil(this.format(document));
             }
         }
     }
+
 
     provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken) {
         return this.format(document);

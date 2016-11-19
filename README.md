@@ -87,6 +87,9 @@ to formatted state
 * a schema file for the .htmltidy json file in the workspace root could be provided.
 
 ## Changelog
+* v1.3.0
+	* auto format is triggered by willSave instead of didSave. 
+
 * v1.2.0
 	* updated category
 	* fixed error preventing auto format
