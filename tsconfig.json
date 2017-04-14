@@ -3,11 +3,14 @@
         "module": "commonjs",
         "target": "es6",
         "outDir": "out",
-        "noLib": true,
+        "noLib": false,
         "sourceMap": true,
         "rootDir": "."
     },
     "exclude": [
         "node_modules"
+    ],
+    "files": [
+        "typings/index.d.ts"
     ]
 }
