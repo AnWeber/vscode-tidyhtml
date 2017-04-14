@@ -83,14 +83,40 @@
                     "default": true,
                     "description": "all tags with '-' separator will be added to new-blocklevel-tags. e.g angular bootstrap: uib-alert"
                 },
-                "tidyHtml.showWarningOnSave": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "show warning, if format fails"
-                },
                 "tidyHtml.tidyExecPath": {
                     "type": "string",
                     "description": "path to tidy executable"
+                },
+                "tidyHtml.errorNotification": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "default": "statusbar",
+                    "enum": [
+                        "none",
+                        "statusbar",
+                        "message"
+                    ],
+                    "description": "type of notification on format error"
+                },
+                "tidyHtml.warningNotification": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "default": "statusbar",
+                    "enum": [
+                        "none",
+                        "statusbar",
+                        "message"
+                    ],
+                    "description": "type of notification on format error"
+                },
+                "tidyHtml.stopOnWarning": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "stop format on warnings"
                 }
             }
         }

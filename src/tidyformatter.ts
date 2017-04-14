@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import { TidyWorker } from './tidyworker';
+import { TidyResult } from './tidyresult';
 import * as lodash from 'lodash';
 
 /**
@@ -41,13 +42,6 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
                     we.replace(textEditor.document.uri, edit.range, edit.newText);
                 });
                 return vscode.workspace.applyEdit(we);
-            })
-            .catch((err) => {
-                console.log(err);
-                if (this.config.showWarningOnSave) {
-                    const errors = err.split('\n\r');
-                    vscode.window.showWarningMessage(errors[0]);
-                }
             });
     }
 
@@ -92,13 +86,38 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
             if (tidyExecPath) {
                 var worker = new TidyWorker(tidyExecPath, settings);
                 return worker.formatAsync(text)
-                    .then((formattedText) => {
+                    .then((result: TidyResult) => {
+                        this._showMessage(result);
+
+                        if (result.isError || this.config.stopOnWarning && result.isWarning) {
+                            return null;
+                        }
                         const range = new vscode.Range(0, 0, Number.MAX_VALUE, Number.MAX_VALUE);
-                        return [new vscode.TextEdit(range, formattedText)];
+                        return [new vscode.TextEdit(range, result.value)];
+                    })
+                    .catch((err: Error) => {
+                        vscode.window.showErrorMessage(err.message);
                     });
             }
-
         }
+    }
+
+    private _showMessage(result: TidyResult) {
+        if (result.error && (result.isError || result.isWarning)) {
+            console.log(result.error);
+            let notificationType = this.config.errorNotification;
+            if (result.isWarning) {
+                notificationType = this.config.warningNotification;
+            }
+            if (notificationType === 'statusbar') {
+                vscode.window.setStatusBarMessage(result.error.message, 5000);
+                return true;
+            } else if (notificationType === 'message') {
+                vscode.window.showErrorMessage(result.error.message);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

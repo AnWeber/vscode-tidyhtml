@@ -78,17 +78,21 @@ to formatted state
 * tidyHtml.enableDynamicTags
     * automatically attach html tags containing '-' in the option [new-blocklevel-tags](http://api.html-tidy.org/tidy/quickref_5.2.0.html#new-blocklevel-tags)
     * tidy exe refuses to format a document with unknown tags. If you want to format a document with e.g angular directives this setting is useful.
-* tidyHtml.showWarningOnSave
-    * show warning dialog, if format fails
+* tidyHtml.errorNotification/ tidyHtml.warningNotification
+   * type of notification on error or warning
+* tidyHtml.stopOnWarning
+    * stop format if warnings exist
 
-
-## Next steps
-* tidy exe outputs a list of errors, if your file is not valid. This error list can be used for linting a html file
-* a schema file for the .htmltidy json file in the workspace root could be provided.
+## Linux execution bit
+* This extension uses [Tidy-HTML5](http://www.html-tidy.org/) by command line call. I try to provide the needed applications for all os types, but I test only on windows. One reason for the bad reviews is, the missing linux execution bit. Please feel free to set the execution bit on your own, if I forget it. You are welcome to create an [issue](https://github.com/AnWeber/vscode-tidyhtml/issues). Thanks.
 
 ## Changelog
+* v1.4.0
+	* statusbar message on format error and warnings (one reason for not so nice reviews)
+    * update [Tidy-HTML5](http://www.html-tidy.org/) to v5.4.0
+
 * v1.3.0
-	* auto format is triggered by willSave instead of didSave. 
+	* auto format is triggered by willSave instead of didSave.
 
 * v1.2.0
 	* updated category

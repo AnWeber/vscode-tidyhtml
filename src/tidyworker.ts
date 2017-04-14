@@ -1,10 +1,7 @@
 'use strict';
 import * as childprocess from 'child_process';
 import * as lodash from 'lodash';
-
-//const EXIT_CODE_OK = 0;
-const EXIT_CODE_WARNING = 1;
-const EXIT_CODE_ERROR = 2;
+import { TidyResult } from './tidyresult';
 
 /**
  * handle child_process to spawn tidy
@@ -35,19 +32,19 @@ export class TidyWorker {
         return '-' + w.toLowerCase();
       });
     };
-    for (var n in options) {
-      if (n) {
-        args.push('--' + toHyphens(n));
-        switch (typeof options[n]) {
+    for (var opt in options) {
+      if (opt) {
+        args.push('--' + toHyphens(opt));
+        switch (typeof options[opt]) {
           case 'string':
           case 'number':
-            args.push(options[n]);
+            args.push(options[opt]);
             break;
           case 'boolean':
-            args.push(options[n] ? 'yes' : 'no');
+            args.push(options[opt] ? 'yes' : 'no');
             break;
           default:
-            throw new Error('unknown option type: ' + typeof options[n]);
+            console.log('unknown option type: ' + typeof options[opt]);
         }
       }
     }
@@ -58,30 +55,26 @@ export class TidyWorker {
    * @param  {string} text content for formatting
    * @return {Promise} promise
    */
-  formatAsync(text): Promise<string> {
+  formatAsync(text): Promise<TidyResult> {
     let promise = new Promise((resolve, reject) => {
-      const worker = childprocess.spawn(this.tidyExec, this._parseOptions(this.options));
-      let formattedText = '';
-      let error = '';
-      worker.stdout.on('data', (data) => {
-        formattedText += data;
-      });
-      worker.stderr.on('data', (data) => {
-        error += data;
-      });
-      worker.on('exit', (code) => {
-        if (code === EXIT_CODE_ERROR && this.options['show-errors']) {
-          reject(error);
-        } else if (code === EXIT_CODE_WARNING && this.options['show-warnings']) {
-          reject(error);
-        } else {
-          if (error && error.indexOf('No warnings or errors were found.') < 0) {
-            console.log(error);
-          }
-          resolve(formattedText);
-        }
-      });
-      worker.stdin.end(text);
+
+      try {
+        const worker = childprocess.spawn(this.tidyExec, this._parseOptions(this.options));
+        let formattedText: string = '';
+        let error: string = '';
+        worker.stdout.on('data', (data) => {
+          formattedText += data;
+        });
+        worker.stderr.on('data', (data) => {
+          error += data;
+        });
+        worker.on('exit', (code: number) => {
+          resolve(new TidyResult(formattedText, error, code));
+        });
+        worker.stdin.end(text);
+      } catch (err) {
+        reject(new Error(err));
+      }
     });
     return promise;
   }
