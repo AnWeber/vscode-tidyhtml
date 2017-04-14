@@ -87,6 +87,9 @@ to formatted state
 * This extension uses [Tidy-HTML5](http://www.html-tidy.org/) by command line call. I try to provide the needed applications for all os types, but I test only on windows. One reason for the bad reviews is, the missing linux execution bit. Please feel free to set the execution bit on your own, if I forget it. You are welcome to create an [issue](https://github.com/AnWeber/vscode-tidyhtml/issues). Thanks.
 
 ## Changelog
+* v1.5.0
+	* publishing on win machines looses posix file attributes. now I am a happy ubuntu user.
+
 * v1.4.0
 	* statusbar message on format error and warnings (one reason for not so nice reviews)
     * update [Tidy-HTML5](http://www.html-tidy.org/) to v5.4.0
