@@ -1,139 +1,143 @@
 {
-    "name": "vscode-tidyhtml",
-    "displayName": "vscode-tidyhtml",
-    "description": "format html with tidy html",
-    "version": "1.5.0",
-    "publisher": "anweber",
-    "license": "MIT",
-    "engines": {
-        "vscode": "^1.6.0"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/AnWeber/vscode-tidyhtml"
-    },
-    "bugs": {
-        "url": "https://github.com/AnWeber/vscode-tidyhtml/issues"
-    },
-    "keywords": [
-        "html",
-        "format",
-        "beautify",
-        "prettify",
-        "tidy"
+  "name": "vscode-tidyhtml",
+  "displayName": "vscode-tidyhtml",
+  "description": "format html with tidy html",
+  "version": "1.5.0",
+  "publisher": "anweber",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.12.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AnWeber/vscode-tidyhtml"
+  },
+  "bugs": {
+    "url": "https://github.com/AnWeber/vscode-tidyhtml/issues"
+  },
+  "keywords": [
+    "html",
+    "format",
+    "beautify",
+    "prettify",
+    "tidy"
+  ],
+  "categories": [
+    "Formatters"
+  ],
+  "activationEvents": [
+    "onCommand:extension.tidyHtml",
+    "workspaceContains:.htmlTidy",
+    "onLanguage:html"
+  ],
+  "main": "./out/src/extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.tidyHtml",
+        "title": "TidyHtml"
+      }
     ],
-    "categories": [
-        "Formatters"
-    ],
-    "activationEvents": [
-        "onCommand:extension.tidyHtml",
-        "workspaceContains:.htmlTidy",
-        "onLanguage:html"
-    ],
-    "main": "./out/src/extension",
-    "contributes": {
-        "commands": [
-            {
-                "command": "extension.tidyHtml",
-                "title": "TidyHtml"
-            }
-        ],
-        "configuration": {
-            "type": "object",
-            "title": "TidyHtml config",
-            "properties": {
-                "tidyHtml.formatOnSave": {
-                    "type": [
-                        "array",
-                        "boolean"
-                    ],
-                    "default": true,
-                    "description": "Automatically format files on save. Set to true to run for html. Use array to set indiviaul types to format: [\"html\", \"php\"]",
-                    "items": {
-                        "type": "string",
-                        "description": "Set to format only provided types on save."
-                    }
-                },
-                "tidyHtml.optionsTidy": {
-                    "type": "object",
-                    "default": {
-                        "markup": true,
-                        "output-xml": false,
-                        "input-xml": true,
-                        "show-warnings": true,
-                        "show-errors": 6,
-                        "numeric-entities": false,
-                        "quote-marks": false,
-                        "quote-nbsp": true,
-                        "quote-ampersand": false,
-                        "break-before-br": false,
-                        "preserve-entities": true,
-                        "uppercase-tags": false,
-                        "uppercase-attributes": false,
-                        "indent": "auto",
-                        "indent-with-tabs": false,
-                        "indent-attributes": true,
-                        "sort-attributes": "alpha",
-                        "wrap": 250
-                    },
-                    "description": "default options for Tidy HTML"
-                },
-                "tidyHtml.enableDynamicTags": {
-                    "type": "boolean",
-                    "default": true,
-                    "description": "all tags with '-' separator will be added to new-blocklevel-tags. e.g angular bootstrap: uib-alert"
-                },
-                "tidyHtml.tidyExecPath": {
-                    "type": "string",
-                    "description": "path to tidy executable"
-                },
-                "tidyHtml.errorNotification": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "default": "statusbar",
-                    "enum": [
-                        "none",
-                        "statusbar",
-                        "message"
-                    ],
-                    "description": "type of notification on format error"
-                },
-                "tidyHtml.warningNotification": {
-                    "type": [
-                        "string",
-                        "null"
-                    ],
-                    "default": "statusbar",
-                    "enum": [
-                        "none",
-                        "statusbar",
-                        "message"
-                    ],
-                    "description": "type of notification on format error"
-                },
-                "tidyHtml.stopOnWarning": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "stop format on warnings"
-                }
-            }
+    "configuration": {
+      "type": "object",
+      "title": "TidyHtml config",
+      "properties": {
+        "tidyHtml.formatOnSave": {
+          "type": [
+            "array",
+            "boolean"
+          ],
+          "default": true,
+          "description": "Automatically format files on save. Set to true to run for html. Use array to set indiviaul types to format: [\"html\", \"php\"]",
+          "items": {
+            "type": "string",
+            "description": "Set to format only provided types on save."
+          }
+        },
+        "tidyHtml.optionsTidy": {
+          "type": "object",
+          "default": {
+            "markup": true,
+            "output-xml": false,
+            "input-xml": false,
+            "show-warnings": true,
+            "show-errors": 6,
+            "numeric-entities": false,
+            "quote-marks": false,
+            "quote-nbsp": true,
+            "quote-ampersand": false,
+            "break-before-br": false,
+            "preserve-entities": true,
+            "uppercase-tags": false,
+            "uppercase-attributes": false,
+            "indent": "auto",
+            "indent-with-tabs": false,
+            "indent-attributes": true,
+            "sort-attributes": "alpha",
+            "wrap": 250
+          },
+          "description": "default options for Tidy HTML"
+        },
+        "tidyHtml.enableDynamicTags": {
+          "type": "boolean",
+          "default": true,
+          "description": "all tags with '-' separator will be added to new-blocklevel-tags. e.g angular bootstrap: uib-alert"
+        },
+        "tidyHtml.tidyExecPath": {
+          "type": "string",
+          "description": "path to tidy executable"
+        },
+        "tidyHtml.errorNotification": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "statusbar",
+          "enum": [
+            "none",
+            "statusbar",
+            "message"
+          ],
+          "description": "type of notification on format error"
+        },
+        "tidyHtml.warningNotification": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "statusbar",
+          "enum": [
+            "none",
+            "statusbar",
+            "message"
+          ],
+          "description": "type of notification on format error"
+        },
+        "tidyHtml.stopOnWarning": {
+          "type": "boolean",
+          "default": false,
+          "description": "stop format on warnings"
+        },
+        "tidyHtml.traceLogging": {
+          "type": "boolean",
+          "default": true,
+          "description": "extended logging"
         }
-    },
-    "icon": "icon.png",
-    "scripts": {
-        "vscode:prepublish": "tsc -p ./",
-        "compile": "tsc -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install"
-    },
-    "devDependencies": {
-        "eslint": "3.10.2",
-        "typescript": "^2.0.10",
-        "typings": "1.5.0",
-        "vscode": "^1.0.0"
-    },
-    "dependencies": {
-        "lodash": "^4.16.4"
+      }
     }
+  },
+  "icon": "icon.png",
+  "scripts": {
+    "vscode:prepublish": "tsc -p ./",
+    "compile": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install"
+  },
+  "devDependencies": {
+    "@types/node": "^7.0.27",
+    "tslint": "^5.4.2",
+    "tslint-eslint-rules": "4.1.1",
+    "typescript": "^2.3.4",
+    "vrsource-tslint-rules": "5.1.0",
+    "vscode": "^1.1.0"
+  }
 }

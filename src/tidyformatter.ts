@@ -4,14 +4,13 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { TidyWorker } from './tidyworker';
 import { TidyResult } from './tidyresult';
-import * as lodash from 'lodash';
+import { Configuration } from './configuration';
 
 /**
  * format manager
  */
 export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vscode.DocumentRangeFormattingEditProvider {
-    private tidyWorker: TidyWorker;
-    private config: any;
+    private config: Configuration;
     private tidySettings: any;
     private tidyExec: string;
 
@@ -22,7 +21,7 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
      * refresh config
      */
     readSettings() {
-        this.config = vscode.workspace.getConfiguration('tidyHtml');
+        this.config = vscode.workspace.getConfiguration('tidyHtml') as Configuration;
         this.tidySettings = null;
         this.tidyExec = null;
     }
@@ -33,15 +32,16 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
      * @param {TextEditor} textEditor active TextEditor
      */
     formatTextEditor(textEditor: vscode.TextEditor) {
-        const score = vscode.languages.match('html', textEditor.document);
-        console.log(score);
         this.format(textEditor.document)
             .then(textedits => {
-                let we = new vscode.WorkspaceEdit();
-                textedits.forEach(edit => {
-                    we.replace(textEditor.document.uri, edit.range, edit.newText);
-                });
-                return vscode.workspace.applyEdit(we);
+                if (textedits) {
+                    let we = new vscode.WorkspaceEdit();
+                    textedits.forEach(edit => {
+                        we.replace(textEditor.document.uri, edit.range, edit.newText);
+                    });
+                    return vscode.workspace.applyEdit(we);
+                }
+                return null;
             });
     }
 
@@ -65,12 +65,11 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
         }
     }
 
-
-    provideDocumentFormattingEdits(document: vscode.TextDocument, options: vscode.FormattingOptions, token: vscode.CancellationToken) {
+    provideDocumentFormattingEdits(document: vscode.TextDocument, _options: vscode.FormattingOptions, _token: vscode.CancellationToken) {
         return this.format(document);
     }
 
-    provideDocumentRangeFormattingEdits(document: vscode.TextDocument, range: vscode.Range, options: vscode.FormattingOptions, token: vscode.CancellationToken) {
+    provideDocumentRangeFormattingEdits(document: vscode.TextDocument, _range: vscode.Range, _options: vscode.FormattingOptions, _token: vscode.CancellationToken) {
         return this.format(document);
     }
 
@@ -79,32 +78,54 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
      * @param {TextDocument} document the document to format
      */
     format(document: vscode.TextDocument) {
-        const text = document.getText();
-        if (text && text.length > 0) {
-            const settings = lodash.merge(this._getTidySettings(), this._addUnknownTagsToNewBlockLevel(text));
-            const tidyExecPath = this._getTidyExec();
-            if (tidyExecPath) {
-                var worker = new TidyWorker(tidyExecPath, settings);
-                return worker.formatAsync(text)
-                    .then((result: TidyResult) => {
-                        this._showMessage(result);
-
-                        if (result.isError || this.config.stopOnWarning && result.isWarning) {
-                            return null;
-                        }
-                        const range = new vscode.Range(0, 0, Number.MAX_VALUE, Number.MAX_VALUE);
-                        return [new vscode.TextEdit(range, result.value)];
-                    })
-                    .catch((err: Error) => {
-                        vscode.window.showErrorMessage(err.message);
-                    });
+        try {
+            const text = document.getText();
+            if (text && text.length > 0) {
+                const settings = Object.assign({}, this.getTidySettings());
+                this.addUnknownTagsToNewBlockLevel(settings, text);
+                if (this.config.traceLogging) {
+                    console.info(`settings: ${settings}`);
+                }
+                const tidyExecPath = this.getTidyExec();
+                if (tidyExecPath) {
+                    const worker = new TidyWorker(tidyExecPath, settings);
+                    if (this.config.traceLogging) {
+                        worker.traceLogging = this.config.traceLogging;
+                    }
+                    return worker.formatAsync(text)
+                        .then((result: TidyResult) => {
+                                if (this.config.traceLogging) {
+                                    console.info(result);
+                                }
+                                this.showMessage(result);
+                                if (result.isError || this.config.stopOnWarning && result.isWarning) {
+                                    return null;
+                                }
+                                const range = new vscode.Range(0, 0, Number.MAX_VALUE, Number.MAX_VALUE);
+                                return [new vscode.TextEdit(range, result.value)];
+                        })
+                        .catch((err: Error) => {
+                            console.error(err);
+                            vscode.window.showErrorMessage(err.message);
+                        });
+                } else if (this.config.traceLogging) {
+                    console.info('no tidy executable found');
+                }
+            } else if (this.config.traceLogging) {
+                console.info('no text');
             }
+        } catch (err) {
+            console.error(err);
+            vscode.window.showErrorMessage(err.message);
         }
+        return Promise.resolve<vscode.TextEdit[]>(null);
     }
 
-    private _showMessage(result: TidyResult) {
+    private showMessage(result: TidyResult) {
         if (result.error && (result.isError || result.isWarning)) {
-            console.log(result.error);
+            if (this.config.traceLogging) {
+                console.error(result);
+            }
             let notificationType = this.config.errorNotification;
             if (result.isWarning) {
                 notificationType = this.config.warningNotification;
@@ -123,7 +144,7 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
     /**
      * get options from workspace options or from file .htmltidy
      */
-    _getTidySettings() {
+    private getTidySettings() {
         if (!this.tidySettings) {
             let options = this.config.optionsTidy;
             if (vscode.workspace.rootPath) {
@@ -146,7 +167,7 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
     *
     * @returns filename
     */
-    _getTidyExec() {
+    private getTidyExec() {
         if (!this.tidyExec) {
             this.tidyExec = this.config.tidyExecPath;
             if (!this.tidyExec || !fs.existsSync(this.tidyExec)) {
@@ -172,26 +193,23 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
      * @param {string} text current text
      * @param {object} options tidy html 5 options
      */
-    _addUnknownTagsToNewBlockLevel(text: string): any {
+    private addUnknownTagsToNewBlockLevel(settings: any, text: string): any {
         if (this.config.enableDynamicTags) {
-            var elements = text.split('<');
+            const elements = text.split('<');
 
-            var blockLevelTags = lodash(elements)
+            let blockLevelTags = elements
                 .map((obj) => obj.trim().split(' ')[0])
                 .filter((obj) => !obj.startsWith('/') && !obj.startsWith('!'))
                 .filter((obj) => obj.indexOf('-') > 0)
-                .uniq()
+                .filter((obj, index, self) => self.indexOf(obj) === index)
                 .join();
-            var existingBlockLevelTags = this._getTidySettings()['new-blocklevel-tags'];
+            const existingBlockLevelTags = settings['new-blocklevel-tags'];
             if (existingBlockLevelTags) {
                 blockLevelTags = existingBlockLevelTags + ' ' + blockLevelTags;
             }
             if (blockLevelTags.length > 0) {
-                return {
-                    'new-blocklevel-tags': blockLevelTags,
-                };
+                settings['new-blocklevel-tags'] = blockLevelTags;
             }
-            return {};
         }
     }
 

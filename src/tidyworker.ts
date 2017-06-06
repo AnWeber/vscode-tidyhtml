@@ -1,6 +1,5 @@
 'use strict';
 import * as childprocess from 'child_process';
-import * as lodash from 'lodash';
 import { TidyResult } from './tidyresult';
 
 /**
@@ -8,6 +7,7 @@ import { TidyResult } from './tidyresult';
  */
 export class TidyWorker {
   tidyExec: string;
+  traceLogging: boolean;
   options: any;
 
   constructor(tidyExec: string, options: any) {
@@ -23,16 +23,16 @@ export class TidyWorker {
    * @param  {object} options json object to convert
    * @return {array} command line arguments
    */
-  _parseOptions(options: any) {
+  private parseOptions(options: any) {
     options = options || {};
-    var args = [];
+    let args = [];
 
-    const toHyphens = (str) => {
-      return str.replace(/([A-Z])/g, function (m, w) {
+    const toHyphens = (str: string) => {
+      return str.replace(/([A-Z])/g, function (_m: string, w: string) {
         return '-' + w.toLowerCase();
       });
     };
-    for (var opt in options) {
+    for (let opt in options) {
       if (opt) {
         args.push('--' + toHyphens(opt));
         switch (typeof options[opt]) {
@@ -55,17 +55,23 @@ export class TidyWorker {
    * @param  {string} text content for formatting
    * @return {Promise} promise
    */
-  formatAsync(text): Promise<TidyResult> {
-    let promise = new Promise((resolve, reject) => {
-
+  formatAsync(text: string): Promise<TidyResult> {
+    return new Promise((resolve, reject) => {
       try {
-        const worker = childprocess.spawn(this.tidyExec, this._parseOptions(this.options));
+        const args = this.parseOptions(this.options);
+        if (this.traceLogging) {
+          console.info(`spawn: ${this.tidyExec} ${args}`);
+        }
+        const worker = childprocess.spawn(this.tidyExec, args);
         let formattedText: string = '';
         let error: string = '';
         worker.stdout.on('data', (data) => {
           formattedText += data;
         });
         worker.stderr.on('data', (data) => {
+          if (this.traceLogging) {
+            console.info(`spawn error: ${JSON.stringify(data)}`);
+          }
           error += data;
         });
         worker.on('exit', (code: number) => {
@@ -75,30 +81,6 @@ export class TidyWorker {
       } catch (err) {
         reject(new Error(err));
       }
-    });
-    return promise;
-  }
-
-  /**
-   * resolve errors of text
-   * @param  {string} text text of errors
-   * @return {Promise} promise
-   */
-  errors(text) {
-
-    return new Promise((resolve, reject) => {
-      const options = lodash.merge({}, this.options, {
-        "show-errors": 10,
-      });
-      const worker = childprocess.spawn(this.tidyExec, this._parseOptions(options));
-      let error = '';
-      worker.stderr.on('data', function (data) {
-        error += data;
-      });
-      worker.on('exit', function (code) {
-        resolve(error);
-      });
-      worker.stdin.end(text);
     });
   }
 }

@@ -22,4 +22,4 @@ export class TidyResult {
         this.isWarning = exitCode === EXIT_CODE_WARNING;
     }
 }
-export default TidyResult
+export default TidyResult;
