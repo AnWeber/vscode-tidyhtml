@@ -120,7 +120,7 @@
         },
         "tidyHtml.traceLogging": {
           "type": "boolean",
-          "default": true,
+          "default": false,
           "description": "extended logging"
         }
       }
