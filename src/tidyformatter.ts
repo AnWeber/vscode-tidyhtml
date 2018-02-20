@@ -107,6 +107,7 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
                         .catch((err: Error) => {
                             console.error(err);
                             vscode.window.showErrorMessage(err.message);
+                            return Promise.resolve<vscode.TextEdit[]>(null);
                         });
                 } else if (this.config.traceLogging) {
                     console.info('no tidy executable found');
@@ -147,14 +148,18 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
     private getTidySettings() {
         if (!this.tidySettings) {
             let options = this.config.optionsTidy;
-            if (vscode.workspace.rootPath) {
-                const optionsFileName = path.join(vscode.workspace.rootPath, '.htmlTidy');
-                if (fs.existsSync(optionsFileName)) {
-                    try {
-                        const fileOptions = JSON.parse(fs.readFileSync(optionsFileName, 'utf8'));
-                        options = fileOptions;
-                    } catch (err) {
-                        vscode.window.showWarningMessage('options in file .htmltidy not valid');
+            if (vscode.workspace.workspaceFolders) {
+                for (let folder of vscode.workspace.workspaceFolders) {
+                    const optionsFileName = path.join(folder.uri.fsPath, '.htmlTidy');
+                    if (fs.existsSync(optionsFileName)) {
+                        try {
+                            const fileOptions = JSON.parse(fs.readFileSync(optionsFileName, 'utf8'));
+                            options = fileOptions;
+                        } catch (err) {
+                            console.error(err);
+                            vscode.window.showWarningMessage('options in file .htmltidy not valid');
+                        }
+                        break;
                     }
                 }
             }

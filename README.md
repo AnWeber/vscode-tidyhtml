@@ -87,6 +87,12 @@ to formatted state
 * This extension uses [Tidy-HTML5](http://www.html-tidy.org/) by command line call. I try to provide the needed applications for all os types, but I test only on windows. One reason for the bad reviews is, the missing linux execution bit. Please feel free to set the execution bit on your own, if I forget it. You are welcome to create an [issue](https://github.com/AnWeber/vscode-tidyhtml/issues). Thanks.
 
 ## Changelog
+* v1.8.0
+	* workspacefolders are now supported
+
+* v1.7.0
+	* same like 1.6.0. invalid publish
+
 * v1.6.0
 	* fixed error after formatting empty file
     * added traceLogging for extendend logging

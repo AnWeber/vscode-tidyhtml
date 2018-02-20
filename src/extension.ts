@@ -2,7 +2,7 @@
 import * as vscode from 'vscode';
 import { TidyFormatter } from './tidyformatter';
 
-const HTMLFilter: vscode.DocumentFilter = ["html", "handlebar", "razor"];
+const HTMLFilter: vscode.DocumentSelector = ['html', 'handlebar', 'razor'];
 
 export function activate(context: vscode.ExtensionContext) {
     const formatter = new TidyFormatter();
@@ -14,7 +14,4 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(vscode.commands.registerTextEditorCommand('extension.tidyHtml', formatter.formatTextEditor, formatter));
 
     return formatter;
-}
-
-export function deactivate() {
 }
