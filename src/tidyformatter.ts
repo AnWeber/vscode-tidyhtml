@@ -157,7 +157,7 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
                             options = fileOptions;
                         } catch (err) {
                             console.error(err);
-                            vscode.window.showWarningMessage('options in file .htmltidy not valid');
+                            vscode.window.showWarningMessage(`Options in file ${optionsFileName} not valid`);
                         }
                         break;
                     }
@@ -175,9 +175,9 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
     private getTidyExec() {
         if (!this.tidyExec) {
             this.tidyExec = this.config.tidyExecPath;
-            if (!this.tidyExec || !fs.existsSync(this.tidyExec)) {
+            if (!this.tidyExec || !fs.accessSync(this.tidyExec, fs.constants.X_OK)) {
                 if (this.tidyExec) {
-                    vscode.window.showWarningMessage(`configured tidy executable is missing. Fallback to default`);
+                    vscode.window.showWarningMessage(`Configured tidy executable is not usable (tidyHtml.tidyExecPath=${this.tidyExec}). Using default tidy executable instead.`);
                 }
                 this.tidyExec = `${__dirname}/../../tidy/${process.platform}/tidy`;
                 if (process.platform === 'win32') {
@@ -185,7 +185,16 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
                 }
                 if (!fs.existsSync(this.tidyExec)) {
                     this.tidyExec = null;
-                    vscode.window.showWarningMessage(`Unsupported platform ${process.platform}. Please configure own tidy executable.`);
+                    vscode.window.showWarningMessage(`Unsupported platform ${process.platform}. Please configure tidyHtml.tidyExecPath.`);
+                } else if (!fs.accessSync(this.tidyExec, fs.constants.X_OK)) {
+                    if (process.platform !== 'win32') {
+                        fs.chmodSync(this.tidyExec, 0o755);  // attempt to add execute permission
+                    }
+                    if (!fs.accessSync(this.tidyExec, fs.constants.X_OK)) {
+                        const msg = `Default tidy executable (${this.tidyExec}) is not usable. Please configure tidyHtml.tidyExecPath.`;
+                        this.tidyExec = null;
+                        vscode.window.showWarningMessage(msg);
+                    }
                 }
             }
         }
