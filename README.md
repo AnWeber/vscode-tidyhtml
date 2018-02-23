@@ -51,7 +51,7 @@ to formatted state
     * file path to tidy exe. If no path is provided, the build in tidy exe (v 5.2.0) will be used
 * tidyHtml.optionsTidy
     * list of command line arguments for tidy exe. Here you can find a full list of available options: [Tidy-HTML5](http://api.html-tidy.org/tidy/quickref_5.2.0.html)
-    * if you create a .htmltidy json file in the workspace root, then this options are preferred
+    * if you create a .htmlTidy json file in the workspace root, then this options are preferred. Please prefer the workspace settings of vscode. This option is deprecated and not tested anymore
     * default options:
 ```
  {
@@ -87,6 +87,10 @@ to formatted state
 * This extension uses [Tidy-HTML5](http://www.html-tidy.org/) by command line call. I try to provide the needed applications for all os types, but I test only on windows. One reason for the bad reviews is, the missing linux execution bit. Please feel free to set the execution bit on your own, if I forget it. You are welcome to create an [issue](https://github.com/AnWeber/vscode-tidyhtml/issues). Thanks.
 
 ## Changelog
+* v1.9.0
+    * release with linux, because last release had POSIX File attributes missing
+    * better error message for missing execution bit. thanks to@sglaser
+
 * v1.8.0
 	* workspacefolders are now supported
 
