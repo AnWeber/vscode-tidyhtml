@@ -2,7 +2,7 @@
     "name": "vscode-tidyhtml",
     "displayName": "vscode-tidyhtml",
     "description": "format html with tidy html",
-    "version": "1.8.0",
+    "version": "1.9.0",
     "publisher": "anweber",
     "license": "MIT",
     "engines": {
