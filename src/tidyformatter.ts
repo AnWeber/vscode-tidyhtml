@@ -94,15 +94,15 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
                     }
                     return worker.formatAsync(text)
                         .then((result: TidyResult) => {
-                                if (this.config.traceLogging) {
-                                    console.info(result);
-                                }
-                                this.showMessage(result);
-                                if (result.isError || this.config.stopOnWarning && result.isWarning) {
-                                    return null;
-                                }
-                                const range = new vscode.Range(0, 0, Number.MAX_VALUE, Number.MAX_VALUE);
-                                return [new vscode.TextEdit(range, result.value)];
+                            if (this.config.traceLogging) {
+                                console.info(result);
+                            }
+                            this.showMessage(result);
+                            if (result.isError || this.config.stopOnWarning && result.isWarning) {
+                                return null;
+                            }
+                            const range = new vscode.Range(0, 0, Number.MAX_VALUE, Number.MAX_VALUE);
+                            return [new vscode.TextEdit(range, result.value)];
                         })
                         .catch((err: Error) => {
                             console.error(err);
@@ -168,6 +168,19 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
         return this.tidySettings;
     }
     /**
+     * return true if path is executable
+     * @param
+     * @return bool
+     */
+    private isExecutable(path: string) {
+        try {
+            fs.accessSync(path, fs.constants.X_OK);
+            return true;
+        } catch (err) {
+            return false;
+        }
+    }
+    /**
     * filename of the tidy html 5 executable
     *
     * @returns filename
@@ -175,7 +188,7 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
     private getTidyExec() {
         if (!this.tidyExec) {
             this.tidyExec = this.config.tidyExecPath;
-            if (!this.tidyExec || !fs.accessSync(this.tidyExec, fs.constants.X_OK)) {
+            if (!this.tidyExec || !this.isExecutable(this.tidyExec)) {
                 if (this.tidyExec) {
                     vscode.window.showWarningMessage(`Configured tidy executable is not usable (tidyHtml.tidyExecPath=${this.tidyExec}). Using default tidy executable instead.`);
                 }
@@ -186,11 +199,11 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
                 if (!fs.existsSync(this.tidyExec)) {
                     this.tidyExec = null;
                     vscode.window.showWarningMessage(`Unsupported platform ${process.platform}. Please configure tidyHtml.tidyExecPath.`);
-                } else if (!fs.accessSync(this.tidyExec, fs.constants.X_OK)) {
+                } else if (!this.isExecutable(this.tidyExec)) {
                     if (process.platform !== 'win32') {
                         fs.chmodSync(this.tidyExec, 0o755);  // attempt to add execute permission
                     }
-                    if (!fs.accessSync(this.tidyExec, fs.constants.X_OK)) {
+                    if (!this.isExecutable(this.tidyExec)) {
                         const msg = `Default tidy executable (${this.tidyExec}) is not usable. Please configure tidyHtml.tidyExecPath.`;
                         this.tidyExec = null;
                         vscode.window.showWarningMessage(msg);
