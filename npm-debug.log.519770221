@@ -1,0 +1,79 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/nodejs', '/usr/bin/npm', 'show', 'vsce', 'version' ]
+2 info using npm@3.10.10
+3 info using node@v6.10.2
+4 silly mapToRegistry name vsce
+5 silly mapToRegistry using default registry
+6 silly mapToRegistry registry https://registry.npmjs.org/
+7 silly mapToRegistry data Result {
+7 silly mapToRegistry   raw: 'vsce',
+7 silly mapToRegistry   scope: null,
+7 silly mapToRegistry   escapedName: 'vsce',
+7 silly mapToRegistry   name: 'vsce',
+7 silly mapToRegistry   rawSpec: '',
+7 silly mapToRegistry   spec: 'latest',
+7 silly mapToRegistry   type: 'tag' }
+8 silly mapToRegistry uri https://registry.npmjs.org/vsce
+9 verbose request uri https://registry.npmjs.org/vsce
+10 verbose request no auth needed
+11 info attempt registry request try #1 at 1:10:14 PM
+12 verbose request id d2ce667956ac0995
+13 verbose etag W/"5914175d-13f79"
+14 verbose lastModified Thu, 11 May 2017 07:48:45 GMT
+15 http request GET https://registry.npmjs.org/vsce
+16 http 200 https://registry.npmjs.org/vsce
+17 verbose headers { 'content-type': 'application/json; charset=UTF-8',
+17 verbose headers   server: 'UploadServer',
+17 verbose headers   'cache-control': 'max-age=300',
+17 verbose headers   'last-modified': 'Thu, 22 Feb 2018 16:04:01 GMT',
+17 verbose headers   etag: '"5a8ee9f1-1fa8f"',
+17 verbose headers   'x-npm-region': 'EU-East',
+17 verbose headers   'content-encoding': 'gzip',
+17 verbose headers   'content-length': '10708',
+17 verbose headers   'accept-ranges': 'bytes',
+17 verbose headers   date: 'Fri, 23 Feb 2018 12:10:14 GMT',
+17 verbose headers   via: '1.1 varnish',
+17 verbose headers   age: '1222',
+17 verbose headers   connection: 'keep-alive',
+17 verbose headers   'x-served-by': 'cache-hhn1540-HHN',
+17 verbose headers   'x-cache': 'HIT',
+17 verbose headers   'x-cache-hits': '1',
+17 verbose headers   'x-timer': 'S1519387815.577887,VS0,VE1',
+17 verbose headers   vary: 'Accept-Encoding, Accept' }
+18 silly get cb [ 200,
+18 silly get   { 'content-type': 'application/json; charset=UTF-8',
+18 silly get     server: 'UploadServer',
+18 silly get     'cache-control': 'max-age=300',
+18 silly get     'last-modified': 'Thu, 22 Feb 2018 16:04:01 GMT',
+18 silly get     etag: '"5a8ee9f1-1fa8f"',
+18 silly get     'x-npm-region': 'EU-East',
+18 silly get     'content-encoding': 'gzip',
+18 silly get     'content-length': '10708',
+18 silly get     'accept-ranges': 'bytes',
+18 silly get     date: 'Fri, 23 Feb 2018 12:10:14 GMT',
+18 silly get     via: '1.1 varnish',
+18 silly get     age: '1222',
+18 silly get     connection: 'keep-alive',
+18 silly get     'x-served-by': 'cache-hhn1540-HHN',
+18 silly get     'x-cache': 'HIT',
+18 silly get     'x-cache-hits': '1',
+18 silly get     'x-timer': 'S1519387815.577887,VS0,VE1',
+18 silly get     vary: 'Accept-Encoding, Accept' } ]
+19 verbose get saving vsce to /home/andreas/.npm/registry.npmjs.org/vsce/.cache.json
+20 verbose correctMkdir /home/andreas/.npm correctMkdir not in flight; initializing
+21 verbose exit [ 0, true ]
+22 verbose stack Error: write EPIPE
+22 verbose stack     at exports._errnoException (util.js:1018:11)
+22 verbose stack     at WriteWrap.afterWrite (net.js:804:14)
+23 verbose cwd /home/andreas/Documents/github/vscode-tidyhtml
+24 error Linux 4.4.0-45-generic
+25 error argv "/usr/bin/nodejs" "/usr/bin/npm" "show" "vsce" "version"
+26 error node v6.10.2
+27 error npm  v3.10.10
+28 error code EPIPE
+29 error errno EPIPE
+30 error syscall write
+31 error write EPIPE
+32 error If you need help, you may report this error at:
+32 error     <https://github.com/npm/npm/issues>
+33 verbose exit [ 1, true ]
