@@ -87,6 +87,8 @@ to formatted state
 * This extension uses [Tidy-HTML5](http://www.html-tidy.org/) by command line call. I try to provide the needed applications for all os types, but I test only on windows. One reason for the bad reviews is, the missing linux execution bit. Please feel free to set the execution bit on your own, if I forget it. You are welcome to create an [issue](https://github.com/AnWeber/vscode-tidyhtml/issues). Thanks.
 
 ## Changelog
+* v1.10.0
+    * fixed tidy exec detection
 * v1.9.0
     * release with linux, because last release had POSIX File attributes missing
     * better error message for missing execution bit. thanks to@sglaser

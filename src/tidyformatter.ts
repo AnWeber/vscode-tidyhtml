@@ -167,36 +167,58 @@ export class TidyFormatter implements vscode.DocumentFormattingEditProvider, vsc
         }
         return this.tidySettings;
     }
+
+    private isExecutable(path: string) {
+        if (fs.existsSync(path)) {
+            try {
+                fs.accessSync(path, fs.constants.X_OK);
+                 return true;
+            } catch (err) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    private getDefaultTidyExec() {
+        let tidyExec = `${__dirname}/../../tidy/${process.platform}/tidy`;
+        if (process.platform === 'win32') {
+            tidyExec += '.exe';
+        }
+        if (!fs.existsSync(tidyExec)) {
+            vscode.window.showWarningMessage(`Unsupported platform ${process.platform}. Please configure tidyHtml.tidyExecPath.`);
+            return null;
+        }
+        return tidyExec;
+    }
+
     /**
     * filename of the tidy html 5 executable
     *
-    * @returns filename
+    * @returns filepname
     */
     private getTidyExec() {
         if (!this.tidyExec) {
-            this.tidyExec = this.config.tidyExecPath;
-            if (!this.tidyExec || !fs.accessSync(this.tidyExec, fs.constants.X_OK)) {
-                if (this.tidyExec) {
-                    vscode.window.showWarningMessage(`Configured tidy executable is not usable (tidyHtml.tidyExecPath=${this.tidyExec}). Using default tidy executable instead.`);
-                }
-                this.tidyExec = `${__dirname}/../../tidy/${process.platform}/tidy`;
-                if (process.platform === 'win32') {
-                    this.tidyExec += '.exe';
-                }
-                if (!fs.existsSync(this.tidyExec)) {
-                    this.tidyExec = null;
-                    vscode.window.showWarningMessage(`Unsupported platform ${process.platform}. Please configure tidyHtml.tidyExecPath.`);
-                } else if (!fs.accessSync(this.tidyExec, fs.constants.X_OK)) {
+            let tidyExecPath = this.config.tidyExecPath;
+            if (tidyExecPath && !this.isExecutable(tidyExecPath)) {
+                tidyExecPath = null;
+                vscode.window.showWarningMessage(`Configured tidy executable is not usable (tidyHtml.tidyExecPath=${tidyExecPath}). Using default tidy executable instead.`);
+            }
+            if (!tidyExecPath) {
+                tidyExecPath = this.getDefaultTidyExec();
+                if (!this.isExecutable(tidyExecPath)) {
                     if (process.platform !== 'win32') {
-                        fs.chmodSync(this.tidyExec, 0o755);  // attempt to add execute permission
-                    }
-                    if (!fs.accessSync(this.tidyExec, fs.constants.X_OK)) {
-                        const msg = `Default tidy executable (${this.tidyExec}) is not usable. Please configure tidyHtml.tidyExecPath.`;
-                        this.tidyExec = null;
-                        vscode.window.showWarningMessage(msg);
+                        fs.chmodSync(tidyExecPath, 0o755);
+                        if (!this.isExecutable(tidyExecPath)) {
+                            tidyExecPath = null;
+                            vscode.window.showWarningMessage(`Default tidy executable (${tidyExecPath}) is missing execute permission. Please configure tidyHtml.tidyExecPath or fix permissions.`);
+                        }
+                    } else {
+                        tidyExecPath = null;
                     }
                 }
             }
+            this.tidyExec = tidyExecPath;
         }
         return this.tidyExec;
     }
